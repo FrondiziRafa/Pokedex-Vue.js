@@ -1,11 +1,13 @@
 <script setup>
 import { onMounted, reactive, ref, computed } from 'vue';
+import CardChosenPokemonVue from '../components/CardChosenPokemon.vue';
 import PokemonListVue from '../components/PokemonList.vue';
-import PokemonList from '../components/PokemonList.vue'
+import PokemonList from '../components/PokemonList.vue';
 
 let urlSvg = ref('https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/')
 let pokemons = reactive(ref());
 let searchPokemonInput = ref("")
+let selectedPokemon = reactive(ref())
 
 onMounted(() => {
   fetch("https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0")
@@ -20,6 +22,13 @@ const filteredPokemons = computed(() => {
   return pokemons.value;
 })
 
+const chosenPokemon = async(pokemon) => {
+  await fetch(pokemon.url)
+  .then(res => res.json())
+  .then(res => selectedPokemon.value = res);
+  console.log(selectedPokemon.value)
+}
+
 </script>
 
 <template>
@@ -27,15 +36,14 @@ const filteredPokemons = computed(() => {
     <div class="container">
       <div class="row mt-5">
         <div class="col-sm-12 col-md-6">
-          <!-- <div class="card" style="width: 18rem;">
-            <img src="..." class="card-img-top" alt="...">
-            <div class="card-body">
-              <h5 class="card-title">Card title</h5>
-              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            </div>
-          </div> -->
+          <CardChosenPokemonVue
+          :name="selectedPokemon.name"
+          :sprites="selectedPokemon.sprites"
+          />
         </div>
-        <div class="col-sm-12 col-md-6">
+        <div 
+          class="col-sm-12 col-md-6"
+        >
           <div class="card">
             <div class="card-body row">
               <div class="mb-3">
@@ -52,6 +60,7 @@ const filteredPokemons = computed(() => {
             :key="pokemon.name"
             :name="pokemon.name"
             :urlSvg ="urlSvg + pokemon.url.split('/')[6] + '.svg'"
+            @click="chosenPokemon(pokemon)"
             />
             </div>
           </div>
@@ -60,3 +69,7 @@ const filteredPokemons = computed(() => {
     </div>
   </main>
 </template>
+
+<style>
+
+</style>
