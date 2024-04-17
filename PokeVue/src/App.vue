@@ -1,85 +1,84 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import {ref} from 'vue'
+import router from './router';
+
+let num = ref(0)
+
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
+  <!-- Navbar -->
+  <nav  class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">
+      <img width="48" height="48" src="https://img.icons8.com/fluency/48/pokeball.png" alt="pokeball"/>
+      PokeVue
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <router-link class="nav-link" aria-current="page" to="/">Home</router-link>
+        </li>
+        <li class="nav-item">
+          <router-link class="nav-link" to="about">Sobre</router-link>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Idiomas
+          </a>
+          <ul class="dropdown-menu">
+            <li>
+                <a class="dropdown-item" href="#">
+                  <img width="48" height="48" src="https://img.icons8.com/fluency/48/brazil-circular.png" alt="brazil-circular"/>
+                  Português
+              </a>
+            </li>
+            <li>
+                <a class="dropdown-item" href="#">
+                <img width="48" height="48" src="https://img.icons8.com/fluency/48/usa-circular.png" alt="usa-circular"/>
+                English
+              </a>
+            </li>
+            <li>
+                <a class="dropdown-item" href="#">
+                  <img width="48" height="48" src="https://img.icons8.com/color/48/spain2-circular.png" alt="spain2-circular"/>
+                  Español 
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
     </div>
-  </header>
+  </div>
+</nav>
 
-  <RouterView />
+<!-- Content -->
+
+<div class="main">
+  <router-view></router-view>
+</div>
+
+<!-- Footer -->
+
+<footer class="bg-primary text-light">
+  <div>
+    {{ new Date().getFullYear() }}
+  </div>
+</footer>
+
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
+<style>
+  footer {
+    position:fixed;
+    bottom:0;
+    width: 100%;
     display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
+    align-items: center;
+    justify-content: center;
+    height: 56px;
 }
 </style>
