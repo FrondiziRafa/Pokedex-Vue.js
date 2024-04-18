@@ -19,7 +19,8 @@ const pokemon = defineProps(["name", "urlSvg"])
 .cardList {
     background: rgb(72, 63, 251);
     background: radial-gradient(circle, rgb(72, 63, 251, 0.5) 0%, rgba(70, 252, 244, 0.3)100%);
-    cursor: pointer;  
+    cursor: pointer;
+    height: auto;  
 }
 .cardList:hover {
     background: rgb(72, 63, 251);

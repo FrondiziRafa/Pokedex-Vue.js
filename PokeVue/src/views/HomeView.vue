@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, reactive, ref, computed } from 'vue';
-import CardChosenPokemonVue from '../components/CardChosenPokemon.vue';
+import CardChosenPokemon from '../components/CardChosenPokemon.vue';
 import PokemonListVue from '../components/PokemonList.vue';
 import PokemonList from '../components/PokemonList.vue';
 
@@ -25,8 +25,9 @@ const filteredPokemons = computed(() => {
 const chosenPokemon = async(pokemon) => {
   await fetch(pokemon.url)
   .then(res => res.json())
-  .then(res => selectedPokemon.value = res);
-  console.log(selectedPokemon.value)
+  .then(res => selectedPokemon.value = res)
+  .catch(err => alert(err))
+  console.log(selectedPokemon.value.sprites)
 }
 
 </script>
@@ -36,15 +37,15 @@ const chosenPokemon = async(pokemon) => {
     <div class="container">
       <div class="row mt-5">
         <div class="col-sm-12 col-md-6">
-          <CardChosenPokemonVue
-          :name="selectedPokemon.name"
-          :sprites="selectedPokemon.sprites"
+          <CardChosenPokemon
+          :name="selectedPokemon?.name"
+          :img="selectedPokemon?.sprites.other.dream_world.front_default"
           />
         </div>
         <div 
           class="col-sm-12 col-md-6"
         >
-          <div class="card">
+          <div class="card card-list">
             <div class="card-body row">
               <div class="mb-3">
                 <label 
@@ -70,6 +71,11 @@ const chosenPokemon = async(pokemon) => {
   </main>
 </template>
 
-<style>
+<style scoped>
+.card-list {
+  overflow-y: scroll;
+  max-height: 400px;
+  overflow-x: hidden;
+}
 
 </style>
