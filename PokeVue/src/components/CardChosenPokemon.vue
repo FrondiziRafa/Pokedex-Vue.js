@@ -7,13 +7,22 @@ const pokemon = defineProps(["name", "img", "loading"])
 <div 
     class="card text-center cardSelectedPokemon"
     >
-    <img 
+    <img
+    v-if="pokemon.name"
     :src="pokemon.img"
     height="200"
     class="card-img-top pt-3" 
-    :alt="pokemon.name">
+    :alt="pokemon.name"
+    >
+    <img
+    v-else
+    src="../assets/pokemon-23.svg"
+    height="150"
+    class="card-img-top pt-3" 
+    alt="???"
+    >
     <div class="card-body">
-        <h5 class="card-title">{{ pokemon.name }}</h5>
+        <h5 class="card-title">{{ pokemon.name || " escolha um Pokemon" }}</h5>
         <hr>
         <div class="row">
             <section class="col">
@@ -32,6 +41,7 @@ const pokemon = defineProps(["name", "img", "loading"])
 
 <style scoped>
 .cardSelectedPokemon{
+    height: 60vh;
     background: rgb(72, 63, 251);
     background: radial-gradient(circle, rgb(220, 194, 106, 0.6) 0%, rgba(244, 0, 0, 0.3)100%);
 }

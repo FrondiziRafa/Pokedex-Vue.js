@@ -1,16 +1,16 @@
 <script setup>
 import { onMounted, reactive, ref, computed } from 'vue';
 import CardChosenPokemon from '../components/CardChosenPokemon.vue';
-import PokemonListVue from '../components/PokemonList.vue';
 import PokemonList from '../components/PokemonList.vue';
 
 let urlSvg = ref('https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/')
+let pokemonEvolution = ref()
 let pokemons = reactive(ref());
 let searchPokemonInput = ref("")
 let selectedPokemon = reactive(ref())
 
 onMounted(() => {
-  fetch("https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0")
+  fetch("https://pokeapi.co/api/v2/pokemon?limit=1000&offset=0")
   .then(res => res.json())
   .then(res => pokemons.value = res.results);
 })
@@ -22,19 +22,20 @@ const filteredPokemons = computed(() => {
   return pokemons.value;
 })
 
-const chosenPokemon = async(pokemon) => {
+const chosenPokemon = async(pokemon, id) => {
+  console.log(id)
   await fetch(pokemon.url)
   .then(res => res.json())
   .then(res => selectedPokemon.value = res)
   .catch(err => alert(err))
-  console.log(selectedPokemon.value.sprites)
+  console.log(selectedPokemon.value)
 }
 
 </script>
 
 <template>
   <main>
-    <div class="container">
+    <div class="container text-body-secondary">
       <div class="row mt-5">
         <div class="col-sm-12 col-md-6">
           <CardChosenPokemon
@@ -57,11 +58,11 @@ const chosenPokemon = async(pokemon) => {
                 type="text" class="form-control" id="exampleFormControlInput1" placeholder="Pesquisar...">
               </div>
             <PokemonList 
-            v-for="pokemon in filteredPokemons"
-            :key="pokemon.name"
-            :name="pokemon.name"
-            :urlSvg ="urlSvg + pokemon.url.split('/')[6] + '.svg'"
-            @click="chosenPokemon(pokemon)"
+              v-for="pokemon in filteredPokemons"
+              :key="pokemon.name"
+              :name="pokemon.name"
+              :urlSvg ="urlSvg + pokemon.url.split('/')[6] + '.svg'"
+              @click="chosenPokemon(pokemon)"
             />
             </div>
           </div>
@@ -73,8 +74,8 @@ const chosenPokemon = async(pokemon) => {
 
 <style scoped>
 .card-list {
+  max-height: 60vh;
   overflow-y: scroll;
-  max-height: 400px;
   overflow-x: hidden;
 }
 

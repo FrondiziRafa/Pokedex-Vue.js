@@ -1,7 +1,12 @@
 <template>
-  <div class="about">
-    <h1>This is an about page</h1>
-  </div>
+  <div class="container mt-4 text-center">
+      <div class="card text-body-secondary">
+        <h1>PokeVue</h1>
+          <div class="card-body">
+            Desafio técnico front-end da empresa Mainô
+          </div>
+      </div>
+    </div>
 </template>
 
 <style>

@@ -2,15 +2,13 @@
 import {ref} from 'vue'
 import router from './router';
 
-let num = ref(0)
-
 </script>
 
 <template>
   <!-- Navbar -->
   <nav  class="navbar navbar-expand-lg navbar-dark bg-primary">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">
+    <a class="navbar-brand" href="/">
       <img width="48" height="48" src="https://img.icons8.com/fluency/48/pokeball.png" alt="pokeball"/>
       PokeVue
     </a>
@@ -72,9 +70,16 @@ let num = ref(0)
 </template>
 
 <style>
+  body{
+  overflow: hidden;
+  min-height: 100vh;
+  background: rgb(106,196,233);
+  background: linear-gradient(0deg, rgba(106,196,233,0.9360119047619048) 0%, rgba(0,41,150,1) 100%);
+}
+
   footer {
-    position:fixed;
-    bottom:0;
+    position: fixed;
+    bottom: 0;
     width: 100%;
     display: flex;
     align-items: center;
