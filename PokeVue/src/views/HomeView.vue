@@ -4,7 +4,7 @@ import CardChosenPokemon from '../components/CardChosenPokemon.vue';
 import PokemonList from '../components/PokemonList.vue';
 
 let urlSvg = ref('https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/')
-let pokemonEvolution = ref()
+let pokemonEvolution = reactive(ref())
 let pokemons = reactive(ref());
 let searchPokemonInput = ref("")
 let selectedPokemon = reactive(ref())
@@ -23,12 +23,20 @@ const filteredPokemons = computed(() => {
 })
 
 const chosenPokemon = async(pokemon, id) => {
-  console.log(id)
   await fetch(pokemon.url)
   .then(res => res.json())
   .then(res => selectedPokemon.value = res)
   .catch(err => alert(err))
-  console.log(selectedPokemon.value)
+  
+  await fetch(`https://pokeapi.co/api/v2/evolution-chain/${selectedPokemon.value.id}`)
+  .then(res => res.json())
+  .then(res => pokemonEvolution.value = res)
+  pokemonEvolution.forEach(element => {
+    
+  });
+    console.log(pokemonEvolution.value)
+    console.log(selectedPokemon.value)
+  .catch(err => alert(err))
 }
 
 </script>
@@ -41,6 +49,7 @@ const chosenPokemon = async(pokemon, id) => {
           <CardChosenPokemon
           :name="selectedPokemon?.name"
           :img="selectedPokemon?.sprites.other.dream_world.front_default"
+          :pokemonEvolution="pokemonEvolution?.chain.evolves_to"
           />
         </div>
         <div 
