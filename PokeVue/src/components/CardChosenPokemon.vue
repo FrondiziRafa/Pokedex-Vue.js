@@ -1,5 +1,5 @@
 <script setup>
-const pokemon = defineProps(["name", "img", "loading", "pokemonEvolution"])
+const pokemon = defineProps(["name", "img", "loading", "pokemonEvolution", "game_indices"])
     
 </script>
 
@@ -36,6 +36,22 @@ const pokemon = defineProps(["name", "img", "loading", "pokemonEvolution"])
                     v-for="evolution in pokemonEvolution"
                     :key="evolution.species"
                     >{{ evolution.species['name'] }}</span>
+                </ul>
+                <strong>Game indices</strong>
+                <ul class="pb-3">
+                    <li 
+                    
+                    v-for="(item, index) in game_indices"
+                    :key="index"
+                    >{{ item.version.name }}</li>
+                </ul>
+                <strong>Game indices</strong>
+                <ul class="pb-3">
+                    <li 
+                    
+                    v-for="(item, index) in game_indices"
+                    :key="index"
+                    >{{ item.version.name }}</li>
                 </ul>
             </section>
         </div>

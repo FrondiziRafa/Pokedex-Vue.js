@@ -8,12 +8,14 @@ let pokemonEvolution = reactive(ref())
 let pokemons = reactive(ref());
 let searchPokemonInput = ref("")
 let selectedPokemon = reactive(ref())
+let game_indices = reactive(ref())
+let test = reactive(ref())
 
 onMounted(() => {
   fetch("https://pokeapi.co/api/v2/pokemon?limit=1000&offset=0")
   .then(res => res.json())
   .then(res => pokemons.value = res.results);
-})
+  })
 
 const filteredPokemons = computed(() => {
   if(pokemons.value && searchPokemonInput.value ){
@@ -27,14 +29,19 @@ const chosenPokemon = async(pokemon, id) => {
   await fetch(pokemon.url)
   .then(res => res.json())
   .then(res => selectedPokemon.value = res)
+  .then(res => game_indices.value = res)
   .catch(err => alert(err))
   
-  await fetch(`https://pokeapi.co/api/v2/evolution-chain/${selectedPokemon.value.id}`)
+  await fetch(`https://pokeapi.co/api/v2/pokemon-species/${selectedPokemon.value.id}`)
   .then(res => res.json())
   .then(res => pokemonEvolution.value = res)
   .then(
-    console.log(pokemonEvolution.value),
-    console.log(selectedPokemon.value.id)
+    fetch(`https://pokeapi.co/api/v2/evolution-chain/${pokemonEvolution.value.id}`)
+    .then(res => res.json())
+    .then(res => test.value = res)
+    .then(console.log(test.value.chain))
+    // console.log(pokemonEvolution.value.id),
+    // console.log(selectedPokemon.value.game_indices)
   )
   .catch(err => alert(err))
 }
@@ -49,6 +56,7 @@ const chosenPokemon = async(pokemon, id) => {
           <CardChosenPokemon
           :name="selectedPokemon?.name"
           :img="selectedPokemon?.sprites.other.dream_world.front_default"
+          :game_indices="selectedPokemon?.game_indices"
           :pokemonEvolution="pokemonEvolution?.chain.evolves_to"
           />
         </div>
