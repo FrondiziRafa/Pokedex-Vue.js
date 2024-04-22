@@ -48,26 +48,26 @@ const pokemon = defineProps([
                 <strong>Evoluções</strong>
                 <ul>
                     <span 
-                    v-for="evolution in pokemonEvolution"
-                    :key="evolution.species"
-                    >{{ evolution.species['name'] }}</span>
+                    v-for="(evolution, species) in pokemonEvolution"
+                    :key="species"
+                    >{{ evolution['name'] }}</span>
                 </ul>
-                <!-- <strong>Game indices</strong> -->
-                <!-- <ul class="pb-3">
+                <strong>Games</strong>
+                <ul class="pb-3">
                     <li 
                     
-                    v-for="(item, index) in game_indices"
+                    v-for="(game, index) in game_indices"
                     :key="index"
-                    >{{ item.version.name }}</li>
-                </ul> -->
-                <!-- <strong>Movimentos</strong>
+                    >{{ game.version.name }}</li>
+                </ul>
+                <strong>Movimentos</strong>
                 <ul class="pb-3">
                     <li 
                     
                     v-for="(move, index) in moves"
                     :key="index"
-                    >{{ .move.name}}</li>
-                </ul> -->
+                    >{{ move.move.name}}</li>
+                </ul>
             </section>
         </div>
     </div>

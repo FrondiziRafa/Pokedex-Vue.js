@@ -18,12 +18,18 @@ onMounted(() => {
   fetch("https://pokeapi.co/api/v2/pokemon?limit=1000&offset=0")
   .then(res => res.json())
   .then(res => pokemons.value = res.results)
+  .then(console.log(pokemons))
   .then(allPokemonTypes());
 });
 
 const filteredPokemons = computed(() => {
-  if (pokemons.value && searchPokemonInput.value) {
-    return pokemons.value.filter(pokemon => pokemon.name.toLowerCase().includes(searchPokemonInput.value.toLowerCase()));
+  let filtered = pokemons.value
+  if (searchPokemonInput.value) {
+    return filtered.filter(pokemon => pokemon.name.toLowerCase().includes(searchPokemonInput.value.toLowerCase()));
+  }
+  else if(selectedType.value) {
+    return filtered.filter(pokemon => pokemon.value.type['name'].toLowerCase().includes(selectedType.value.toLocaleLowerCase()))
+    return pokemonListTypes
   }
   return pokemons.value;
 });
@@ -84,12 +90,13 @@ const chosenPokemon = async (pokemon, id) => {
       selectedPokemon.value = pokemonData;
       game_indices.value = pokemonData.game_indices;
       
-      const speciesResponse = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${selectedPokemon.value.id}`);
-      if (!speciesResponse.ok) {
-        throw new Error(`HTTP error! Status: ${speciesResponse.status}`);
+      const evolutionResponse = await fetch(`https://pokeapi.co/api/v2/evolution-chain/${selectedPokemon.value.id}`);
+      if (!evolutionResponse.ok) {
+        throw new Error(`HTTP error! Status: ${evolutionResponse.status}`);
       }
-      const speciesData = await speciesResponse.json();
-      pokemonEvolution.value = speciesData;
+      const evolutionData = await evolutionResponse.json();
+      pokemonEvolution.value = evolutionData;
+      console.log(evolutionData.chain.evolves_to[0])
     } catch (error) {
       alert(error);
     }
@@ -109,6 +116,7 @@ const chosenPokemon = async (pokemon, id) => {
           :img="selectedPokemon?.sprites.other.dream_world.front_default"
           :sprites="selectedPokemon?.sprites"
           :game_indices="selectedPokemon?.game_indices"
+          :pokemonEvolution="pokemonEvolution?.chain.evolves_to[0]"
           :moves="selectedPokemon?.moves"
           />
         </div>
@@ -127,7 +135,10 @@ const chosenPokemon = async (pokemon, id) => {
               </label>
               <input
               v-model= "searchPokemonInput"
-              type="text" class="form-control" id="exampleFormControlInput1" placeholder="Pesquisar...">
+              type="text" 
+              class="form-control" 
+              id="exampleFormControlInput1" 
+              placeholder="Pesquisar...">
               <select
                 class="form-select"
                 aria-label="Default select example"
@@ -147,6 +158,7 @@ const chosenPokemon = async (pokemon, id) => {
               v-for="pokemon in filteredPokemons"
               :key="pokemon.name"
               :name="pokemon.name"
+              :pokemonListTypes="pokemon.types"
               :urlSvg ="urlSvg + pokemon.url.split('/')[6] + '.svg'"
               @click="chosenPokemon(pokemon)"
             />
