@@ -3,51 +3,101 @@ import { onMounted, reactive, ref, computed } from 'vue';
 import CardChosenPokemon from '../components/CardChosenPokemon.vue';
 import PokemonList from '../components/PokemonList.vue';
 
-let urlSvg = ref('https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/')
-let pokemonEvolution = reactive(ref())
+let urlSvg = ref('https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/');
+let pokemonEvolution = reactive(ref());
 let pokemons = reactive(ref());
-let searchPokemonInput = ref("")
-let selectedPokemon = reactive(ref())
-let pokemonTypes = reactive(ref())
-let game_indices = reactive(ref())
+let searchPokemonInput = ref('');
+let selectedType = ref("")
+let selectedPokemon = reactive(ref());
+let pokemonTypes = reactive(ref());
+let pokemonListTypes = reactive(ref())
+let pokemonSpecies = reactive(ref())
+let game_indices = reactive(ref());
 
 onMounted(() => {
   fetch("https://pokeapi.co/api/v2/pokemon?limit=1000&offset=0")
   .then(res => res.json())
-  .then(res => pokemons.value = res.results);
-  })
+  .then(res => pokemons.value = res.results)
+  .then(allPokemonTypes());
+});
 
 const filteredPokemons = computed(() => {
-  if(pokemons.value && searchPokemonInput.value ){
-    return pokemons.value.filter(pokemon => pokemon.name.toLowerCase().includes(searchPokemonInput.value.toLocaleLowerCase()))
+  if (pokemons.value && searchPokemonInput.value) {
+    return pokemons.value.filter(pokemon => pokemon.name.toLowerCase().includes(searchPokemonInput.value.toLowerCase()));
   }
-  // console.log(pokemons.value)
   return pokemons.value;
-})
+});
 
-const allPokemonTypes = async(pokemon, id) => {
-  await fetch('https://pokeapi.co/api/v2/type')
-  .then(res => res.json())
-  .then(res => pokemonTypes.value = res)
-  .then(console.log(pokemonTypes))
+const allPokemonTypes = async () => {
+  try {
+    const response = await fetch('https://pokeapi.co/api/v2/type');
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const data = await response.json();
+    pokemonTypes.value = data.results;
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const pokeType = async (selectedType) => {
+    try {
+      const response = await fetch(`https://pokeapi.co/api/v2/type/${selectedType}`);
+      if(! response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`)
+      }
+      const data = await response.json()
+      pokemonListTypes.value = data.results
+      console.log(data.pokemon)
+
+    } catch (error) {
+      console.error(error);
+  }
+
 }
 
-const chosenPokemon = async(pokemon, id) => {
-  await fetch(pokemon.url)
-  .then(res => res.json())
-  .then(res => selectedPokemon.value = res)
-  .then(console.log(selectedPokemon))
-  .then(res => game_indices.value = res)
-  .catch(err => alert(err))
-  
-  await fetch(`https://pokeapi.co/api/v2/pokemon-species/${selectedPokemon.value.id}`)
-  .then(res => res.json())
-  .then(res => pokemonEvolution.value = res)
-  .then(allPokemonTypes())
-  .catch(err => alert(err))
-}
+// const allPokemonSpecies = async () => {
+//     try {
+//       const response = await fetch('https://pokeapi.co/api/v2/pokemon-species');
+//       if (!response.ok) {
+//         throw new Error(`HTTP error! Status: ${response.status}`);
+//       }
+//       const data = await response.json();
+//       pokemonSpecies.value = data.results;
+//       console.log(pokemonSpecies.value);
+//     } catch (error) {
+//       console.error(error);
+    
+//   }
+// };
+
+
+const chosenPokemon = async (pokemon, id) => {
+    try {
+      const response = await fetch(pokemon.url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const pokemonData = await response.json();
+      selectedPokemon.value = pokemonData;
+      game_indices.value = pokemonData.game_indices;
+      
+      const speciesResponse = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${selectedPokemon.value.id}`);
+      if (!speciesResponse.ok) {
+        throw new Error(`HTTP error! Status: ${speciesResponse.status}`);
+      }
+      const speciesData = await speciesResponse.json();
+      pokemonEvolution.value = speciesData;
+    } catch (error) {
+      alert(error);
+    }
+  }
+
 
 </script>
+
 
 <template>
   <main>
@@ -69,20 +119,29 @@ const chosenPokemon = async(pokemon, id) => {
             <div class="card-body row">
               <div class="mb-3">
                 <label 
-                hidden for="searchPokemonInput" class="form-label">Email address
+                hidden for="searchPokemonInput" 
+                class="form-label"
+                id="searchPokemonInput" 
+                >
+                Pesquisar...
               </label>
+              <input
+              v-model= "searchPokemonInput"
+              type="text" class="form-control" id="exampleFormControlInput1" placeholder="Pesquisar...">
               <select
-                v-for="(index,type ) in pokemonTypes"
-                :key="index"
                 class="form-select"
                 aria-label="Default select example"
+                v-model="selectedType"
+                @click="pokeType(selectedType)" 
                 >
-                <option selected>Tipo</option>
-                <option value="1">{{type.results.name}}</option>
+                  <option selected>Tipo</option>
+                  <option
+                  v-for="(type, index) in pokemonTypes"
+                  :key="index"
+                  :value="type.name">{{ type.name }}
+                  </option>
               </select>
-                <input
-                v-model= "searchPokemonInput"
-                type="text" class="form-control" id="exampleFormControlInput1" placeholder="Pesquisar...">
+              <!-- <p v-if="selectedType">{{ selectedType }}</p> -->
               </div>
             <PokemonList 
               v-for="pokemon in filteredPokemons"

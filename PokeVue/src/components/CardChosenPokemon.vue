@@ -43,7 +43,6 @@ const pokemon = defineProps([
                      <img :src="sprite" alt="">
                     </li>
                 </ul>
-                <span>{{ pokemon.sprites }}</span>
             </section>
             <section class="col">
                 <strong>Evoluções</strong>
