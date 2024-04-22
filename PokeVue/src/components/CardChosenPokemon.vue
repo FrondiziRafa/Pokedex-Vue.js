@@ -1,5 +1,13 @@
 <script setup>
-const pokemon = defineProps(["name", "img", "loading", "pokemonEvolution", "game_indices"])
+const pokemon = defineProps([
+    "name", 
+    "img", 
+    "loading", 
+    "pokemonEvolution", 
+    "game_indices", 
+    "moves",
+    "sprites"
+])
     
 </script>
 
@@ -27,6 +35,14 @@ const pokemon = defineProps(["name", "img", "loading", "pokemonEvolution", "game
         <div class="row">
             <section class="col">
                 <strong>Sprites:</strong>
+                <ul>
+                    <li 
+                    v-for="(sprite, index) in sprites"
+                    :key="index"
+                    >
+                     <img :src="sprite" alt="">
+                    </li>
+                </ul>
                 <span>{{ pokemon.sprites }}</span>
             </section>
             <section class="col">
@@ -37,22 +53,22 @@ const pokemon = defineProps(["name", "img", "loading", "pokemonEvolution", "game
                     :key="evolution.species"
                     >{{ evolution.species['name'] }}</span>
                 </ul>
-                <strong>Game indices</strong>
-                <ul class="pb-3">
+                <!-- <strong>Game indices</strong> -->
+                <!-- <ul class="pb-3">
                     <li 
                     
                     v-for="(item, index) in game_indices"
                     :key="index"
                     >{{ item.version.name }}</li>
-                </ul>
-                <strong>Game indices</strong>
+                </ul> -->
+                <!-- <strong>Movimentos</strong>
                 <ul class="pb-3">
                     <li 
                     
-                    v-for="(item, index) in game_indices"
+                    v-for="(move, index) in moves"
                     :key="index"
-                    >{{ item.version.name }}</li>
-                </ul>
+                    >{{ .move.name}}</li>
+                </ul> -->
             </section>
         </div>
     </div>

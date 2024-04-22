@@ -8,8 +8,8 @@ let pokemonEvolution = reactive(ref())
 let pokemons = reactive(ref());
 let searchPokemonInput = ref("")
 let selectedPokemon = reactive(ref())
+let pokemonTypes = reactive(ref())
 let game_indices = reactive(ref())
-let test = reactive(ref())
 
 onMounted(() => {
   fetch("https://pokeapi.co/api/v2/pokemon?limit=1000&offset=0")
@@ -25,24 +25,25 @@ const filteredPokemons = computed(() => {
   return pokemons.value;
 })
 
+const allPokemonTypes = async(pokemon, id) => {
+  await fetch('https://pokeapi.co/api/v2/type')
+  .then(res => res.json())
+  .then(res => pokemonTypes.value = res)
+  .then(console.log(pokemonTypes))
+}
+
 const chosenPokemon = async(pokemon, id) => {
   await fetch(pokemon.url)
   .then(res => res.json())
   .then(res => selectedPokemon.value = res)
+  .then(console.log(selectedPokemon))
   .then(res => game_indices.value = res)
   .catch(err => alert(err))
   
   await fetch(`https://pokeapi.co/api/v2/pokemon-species/${selectedPokemon.value.id}`)
   .then(res => res.json())
   .then(res => pokemonEvolution.value = res)
-  .then(
-    fetch(`https://pokeapi.co/api/v2/evolution-chain/${pokemonEvolution.value.id}`)
-    .then(res => res.json())
-    .then(res => test.value = res)
-    .then(console.log(test.value.chain))
-    // console.log(pokemonEvolution.value.id),
-    // console.log(selectedPokemon.value.game_indices)
-  )
+  .then(allPokemonTypes())
   .catch(err => alert(err))
 }
 
@@ -56,8 +57,9 @@ const chosenPokemon = async(pokemon, id) => {
           <CardChosenPokemon
           :name="selectedPokemon?.name"
           :img="selectedPokemon?.sprites.other.dream_world.front_default"
+          :sprites="selectedPokemon?.sprites"
           :game_indices="selectedPokemon?.game_indices"
-          :pokemonEvolution="pokemonEvolution?.chain.evolves_to"
+          :moves="selectedPokemon?.moves"
           />
         </div>
         <div 
@@ -69,7 +71,15 @@ const chosenPokemon = async(pokemon, id) => {
                 <label 
                 hidden for="searchPokemonInput" class="form-label">Email address
               </label>
-
+              <select
+                v-for="(index,type ) in pokemonTypes"
+                :key="index"
+                class="form-select"
+                aria-label="Default select example"
+                >
+                <option selected>Tipo</option>
+                <option value="1">{{type.results.name}}</option>
+              </select>
                 <input
                 v-model= "searchPokemonInput"
                 type="text" class="form-control" id="exampleFormControlInput1" placeholder="Pesquisar...">
