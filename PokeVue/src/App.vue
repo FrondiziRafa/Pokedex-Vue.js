@@ -6,7 +6,7 @@ import router from './router';
 
 <template>
   <!-- Navbar -->
-  <nav  class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <nav  class="navbar navbar-expand-lg navbar-dark bg-success">
   <div class="container-fluid">
     <a class="navbar-brand" href="/">
       <img width="48" height="48" src="https://img.icons8.com/fluency/48/pokeball.png" alt="pokeball"/>
@@ -61,7 +61,7 @@ import router from './router';
 
 <!-- Footer -->
 
-<footer class="bg-primary text-light">
+<footer class="bg-success text-light">
   <div>
     {{ new Date().getFullYear() }}
   </div>
@@ -74,7 +74,7 @@ import router from './router';
   overflow: hidden;
   min-height: 100vh;
   background: rgb(106,196,233);
-  background: linear-gradient(0deg, rgba(106,196,233,0.9360119047619048) 0%, rgba(0,41,150,1) 100%);
+  background: linear-gradient(0deg, rgba(255, 255, 255, 0.936) 0%, rgb(117, 168, 156) 100%);
 }
 
   footer {

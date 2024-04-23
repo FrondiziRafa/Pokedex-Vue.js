@@ -79,9 +79,9 @@ const pokemon = defineProps([
 
 <style scoped>
 .cardSelectedPokemon{
-    height: 70vh;
-    background: rgb(72, 63, 251);
-    background: radial-gradient(circle, rgb(220, 194, 106, 0.6) 0%, rgba(244, 0, 0, 0.3)100%);
+    height: 75vh;
+    background: rgb(247, 247, 250);
+    background: radial-gradient(circle, rgba(99, 206, 127, 0.6) 0%, rgba(249, 249, 249, 0.3)100%);
 }
 
 li {
