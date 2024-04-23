@@ -12,63 +12,65 @@ const pokemon = defineProps([
 </script>
 
 <template>
-<div 
-    class="card text-center cardSelectedPokemon"
-    >
+<div class="card text-center cardSelectedPokemon">
     <img
     v-if="pokemon.name"
     :src="pokemon.img"
-    height="200"
     class="card-img-top pt-3" 
     :alt="pokemon.name"
     >
     <img
     v-else
     src="../assets/pokemon-23.svg"
-    height="150"
     class="card-img-top pt-3" 
     alt="???"
     >
     <div class="card-body">
         <h5 class="card-title">{{ pokemon.name || " escolha um Pokemon" }}</h5>
         <hr>
-        <div class="row">
-            <section class="col">
-                <strong>Sprites:</strong>
-                <ul>
+        <div class="">
+            <div class="sprite-card ">
+                <h3>Sprites:</h3>
+                <ul class="">
                     <li 
                     v-for="(sprite, index) in sprites"
                     :key="index"
+                    class="" 
                     >
-                     <img :src="sprite" alt="">
+                        <img :src="sprite" alt="">
                     </li>
                 </ul>
-            </section>
-            <section class="col">
-                <strong>Evoluções</strong>
-                <ul>
-                    <span 
-                    v-for="(evolution, species) in pokemonEvolution"
-                    :key="species"
-                    >{{ evolution['name'] }}</span>
-                </ul>
-                <strong>Games</strong>
-                <ul class="pb-3">
-                    <li 
-                    
-                    v-for="(game, index) in game_indices"
-                    :key="index"
-                    >{{ game.version.name }}</li>
-                </ul>
-                <strong>Movimentos</strong>
-                <ul class="pb-3">
-                    <li 
-                    
-                    v-for="(move, index) in moves"
-                    :key="index"
-                    >{{ move.move.name}}</li>
-                </ul>
-            </section>
+            </div>
+            <div class="attribute-card">
+                <h3>Evoluções</h3>
+                <h4
+                v-for="(evolution, species) in pokemonEvolution"
+                :key="species"
+                >{{ evolution['name'] }}
+                </h4>
+            </div>
+            <div class="attr">
+                <div>
+                    <h3>Games</h3>
+                    <ul>
+                        <li 
+                        v-for="(game, index) in game_indices"
+                        :key="index"
+                        class="px-2 py-1"
+                        >{{ game.version.name }}</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Movimentos</h3>
+                    <ul>
+                        <li 
+                        v-for="(move, index) in moves"
+                        :key="index"
+                        class=""
+                        >{{ move.move.name}}</li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -77,9 +79,79 @@ const pokemon = defineProps([
 
 <style scoped>
 .cardSelectedPokemon{
-    height: 60vh;
+    height: 70vh;
     background: rgb(72, 63, 251);
     background: radial-gradient(circle, rgb(220, 194, 106, 0.6) 0%, rgba(244, 0, 0, 0.3)100%);
 }
 
+li {
+    list-style: none;
+}
+.cardSelectedPokemon img{
+    height:250px
+}
+
+.sprite-card {
+    width: 100% !important;
+}
+
+.sprite-card ul {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+}
+
+.sprite-card ul li {
+    height: 70px;
+    width: 70px;
+}
+
+.sprite-card ul li img {
+    height: 70px;
+    width: 70px;
+}
+
+
+.attr {
+    display: flex;
+    box-sizing:border-box;
+    width: 100%;
+    background: transparent;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+.attr div  {
+    width: 48%;
+    height: 100%;
+    border-radius:5px;
+    box-sizing:border-box;
+}
+
+.attr div ul {
+    overflow: scroll;
+    overflow-x:hidden ;
+    background: transparent;
+    height:200px;
+
+}
+
+.attr div ul li {
+    padding: 2px 5px;
+    text-align: left;
+}
+
+
+@media (max-width: 600px) {
+    
+    .cardSelectedPokemon{
+        height: 40vh;
+        width:40%;
+        margin:0 0 10px 0;
+    }
+    .cardSelectedPokemon img{
+        height:100px
+    }
+}
 </style>

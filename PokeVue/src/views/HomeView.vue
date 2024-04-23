@@ -14,6 +14,7 @@ let pokemonTypes = reactive(ref());
 let pokemonSpecies = reactive(ref())
 let pokemonListTypes = reactive(ref())
 let pokemonListSpecies = reactive(ref())
+let query = name ? name : "" && tipo ? tipo : "" && especie ? especie : ""
 let game_indices = reactive(ref());
 
 onMounted(() => {
@@ -27,12 +28,18 @@ onMounted(() => {
 
 const filteredPokemons = computed((pokemon, pokemonListTypes) => {
   let filtered = pokemons.value
-  if (searchPokemonInput.value) {
-    return filtered.filter(pokemon => pokemon.name.toLowerCase().includes(searchPokemonInput.value.toLowerCase()));
+  if (searchPokemonInput ? searchPokemonInput : "" && selectedType.value ? selectedType.value  : "" && selectedSpecie.value ? selectedSpecie.value : "" ) {
+    // return filtered.filter(pokemon => pokemon.name.toLowerCase().includes(searchPokemonInput.value.toLowerCase()));
+    console.log(searchPokemonInput)
+    console.log(selectedType)
+    console.log(selectedSpecie)
   }
-  else if(pokemonListTypes) {
-    return filtered.filter(pokemon => pokemon.value.toLowerCase().includes(pokemonListTypes.value.toLocaleLowerCase()))
-  }
+  // if (searchPokemonInput.value ) {
+  //   return filtered.filter(pokemon => pokemon.name.toLowerCase().includes(searchPokemonInput.value.toLowerCase()));
+  // }
+  // else if(pokemonListTypes) {
+  //   return filtered.filter(pokemon => pokemon.name.toLowerCase().contains(pokemonListTypes.value.toLocaleLowerCase()))
+  // }
   return pokemons.value;
 });
 
@@ -44,7 +51,6 @@ const allPokemonTypes = async () => {
     }
     const data = await response.json();
     pokemonTypes.value = data.results;
-    console.log(data);
   } catch (error) {
     console.error(error);
   }
@@ -53,17 +59,32 @@ const allPokemonTypes = async () => {
 const pokeType = async (selectedType) => {
     try {
       const response = await fetch(`https://pokeapi.co/api/v2/type/${selectedType}`);
-      if(! response.ok) {
+      if(!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`)
       }
       const data = await response.json()
       pokemonListTypes.value = data.results
-      console.log(data) 
+      console.log(data.pokemon) 
 
     } catch (error) {
       console.error(error);
   }
 }
+
+const allPokemonSpecies = async () => {
+    try {
+      const response = await fetch('https://pokeapi.co/api/v2/pokemon-species');
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const data = await response.json();
+      pokemonSpecies.value = data.results;
+      // console.log(pokemonSpecies.value);
+    } catch (error) {
+      console.error(error);
+    
+  }
+};
 
 const pokeSpecie = async (selectedSpecie) => {
     try {
@@ -80,20 +101,6 @@ const pokeSpecie = async (selectedSpecie) => {
   }
 }
 
-const allPokemonSpecies = async () => {
-    try {
-      const response = await fetch('https://pokeapi.co/api/v2/pokemon-species');
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      const data = await response.json();
-      pokemonSpecies.value = data.results;
-      console.log(pokemonSpecies.value);
-    } catch (error) {
-      console.error(error);
-    
-  }
-};
 
 const pokeEvolution = async () => {
   try{
@@ -118,6 +125,7 @@ const chosenPokemon = async (pokemon) => {
       }
       const pokemonData = await response.json();
       selectedPokemon.value = pokemonData;
+      console.log(pokemonData)
       game_indices.value = pokemonData.game_indices;
       pokeEvolution()
   }
@@ -168,11 +176,12 @@ const chosenPokemon = async (pokemon) => {
                 v-model="selectedType"
                 @click="pokeType(selectedType)" 
                 >
+                <option value="" selected>Tipo</option>
                   <option
                   v-for="(type, index) in pokemonTypes"
                   :key="index"
                   :value="type.name"
-                  selected>Tipo {{ type.name }}</option>
+                  selected>{{ type.name }}</option>
               </select>
               
               <select
@@ -181,6 +190,7 @@ const chosenPokemon = async (pokemon) => {
                 v-model="selectedSpecie"
                 @click="pokeSpecie(selectedSpecie)" 
                 >
+                <option value="" selected>Espécie</option>
                   <option
                   v-for="(type, index) in pokemonSpecies"
                   :key="index"
@@ -192,7 +202,15 @@ const chosenPokemon = async (pokemon) => {
               v-for="pokemon in filteredPokemons"
               :key="pokemon.name"
               :name="pokemon.name"
-              :pokemonListTypes="pokemon.pokemonListTypes"
+              :urlSvg ="urlSvg + pokemon.url.split('/')[6] + '.svg'"
+              @click="chosenPokemon(pokemon)"
+            />
+            <!--const query = nome ? nome : "" && tipo ? tipo : "" && especie ? especie : "" -->
+            <PokemonList 
+              v-for="pokemon in filteredPokemons"
+              :key="pokemon.name"
+              :name="pokemon.name"
+              :pokemonListTypes="pokemon.types"
               :urlSvg ="urlSvg + pokemon.url.split('/')[6] + '.svg'"
               @click="chosenPokemon(pokemon)"
             />
@@ -209,6 +227,12 @@ const chosenPokemon = async (pokemon) => {
   max-height: 60vh;
   overflow-y: scroll;
   overflow-x: hidden;
+}
+
+@media (max-width: 600px) {
+  .card-list {
+  max-height: 50vh;
+}
 }
 
 </style>

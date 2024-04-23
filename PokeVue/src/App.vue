@@ -61,11 +61,11 @@ import router from './router';
 
 <!-- Footer -->
 
-<!-- <footer class="bg-primary text-light">
+<footer class="bg-primary text-light">
   <div>
     {{ new Date().getFullYear() }}
   </div>
-</footer> -->
+</footer>
 
 </template>
 
