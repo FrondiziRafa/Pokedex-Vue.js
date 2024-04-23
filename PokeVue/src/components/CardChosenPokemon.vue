@@ -88,7 +88,7 @@ li {
     list-style: none;
 }
 .cardSelectedPokemon img{
-    height:250px
+    height:80px
 }
 
 .sprite-card {
@@ -133,7 +133,7 @@ li {
     overflow: scroll;
     overflow-x:hidden ;
     background: transparent;
-    height:200px;
+    height:160px;
 
 }
 

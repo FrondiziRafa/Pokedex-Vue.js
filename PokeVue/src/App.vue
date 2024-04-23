@@ -61,7 +61,7 @@ import router from './router';
 
 <!-- Footer -->
 
-<footer class="bg-success text-light">
+<footer class="bg-light text-success">
   <div>
     {{ new Date().getFullYear() }}
   </div>
